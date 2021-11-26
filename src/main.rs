@@ -23,6 +23,7 @@ async fn main() -> Result<()> {
 
     let app = Router::new()
         .route("/task", get(get_task).post(submit_task))
+        .route("/status", get(status))
         .layer(AddExtensionLayer::new(db))
         .layer(tower_http::auth::RequireAuthorizationLayer::basic(
             "bot",
@@ -58,4 +59,8 @@ async fn submit_task(
         Ok(_) => (StatusCode::OK, "Submitted!".to_string()),
         Err(err) => (StatusCode::BAD_REQUEST, err.to_string()),
     }
+}
+
+async fn status() -> StatusCode {
+    StatusCode::OK
 }
